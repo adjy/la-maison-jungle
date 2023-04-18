@@ -1,6 +1,8 @@
 // import "../styles/Banner.css"
 import { plantList } from '../datas/plantList'
 import '../styles/ShoppingList.css'
+// import CareScale from './CareScale';
+import PlantItem from './PlantItem';
 const categories = [];
 
 plantList.forEach(element => {
@@ -24,13 +26,22 @@ function ShoppingList(){
                 ))}
             </ul>
             
-            <ul className='lmj-list'>
-                {plantList.map((plant) =>(
-                    <li key = {plant.id} className='lmj-plant-item'>
-                        {plant.name}
-                        {inSolde(plant.isSpecialOffer)}
-                    
-                    </li>
+            <ul className='lmj-plant-list'>
+                {plantList.map(({id, cover, name, water, light}  ) =>(
+                    <PlantItem 
+                        name = {name}
+                        id = {id}
+                        cover = {cover}
+                        water = {water}
+                        light={light}
+                    />
+                    // <li key = {plant.id} className='lmj-plant-item'>
+                    //     {plant.name}
+                    //     {inSolde(plant.isSpecialOffer)}
+                    //     {/* <CareScale scaleValue={plant.light} /> */}
+                    //     <CareScale careType='water' scaleValue={plant.water} />
+                    //     <CareScale careType='light' scaleValue={plant.light} />
+                    // </li>
                 ))}
            
             </ul>
