@@ -7,15 +7,26 @@ function CareScale({scaleValue, careType} ) {
     
     const ScaleType = careType === "light" ? (<img src={sun} alt='sun-icon' />) 
     : (<img src={water} alt='water-icon' />);
+
+
+    function handleClick() {
+        const typeDeCare = careType === "light" ? "de lumière" : "d'arrosage";
+        const val = ['peu','modérement','beaucoup'];
+
+        const Sortie = val[ (scaleValue - 1)] ;
+        alert(`Cette plante requiert ${Sortie} ${typeDeCare}`)
+    }
+
+
     return(
-        <div>
+        <div onClick={() => handleClick()}>
             {range.map((rangeElem)=>
-                scaleValue >= rangeElem? <span key = {rangeElem.toString()}>
+                scaleValue >= rangeElem? (<span key = {rangeElem.toString()}>
                     {ScaleType}
-                </span> : null)}
+                </span>) : null)}
             
         </div>
-        )
+        );
 }
     
 export default CareScale

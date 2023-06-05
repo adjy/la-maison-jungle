@@ -1,53 +1,61 @@
-// import "../styles/Banner.css"
 import { plantList } from '../datas/plantList'
+import { useState } from 'react'
+import PlantItem from './PlantItem'
+import Categories from './Categories'
+
 import '../styles/ShoppingList.css'
-// import CareScale from './CareScale';
-import PlantItem from './PlantItem';
-const categories = [];
 
-plantList.forEach(element => {
-    
-    if(!categories.includes(element.category))
-        categories.push(element.category);
-});
+function ShoppingList({cart, updateCart}) {
 
-function inSolde(element){
-    return element && <div className='lmj-sales'> Soldes </div>;
-}
+    const [activeCategory, setActiveCategory] = useState('');
+
+    const categories = plantList.reduce(
+        (acc, plant) => acc.includes(plant.category) ? acc : acc.concat(plant.category), [] );
+
+  
+
+    function addToCart(name, price){
+        const currentPlantAdded = cart.find((plant) => plant.name === name) ; // recher si la plante se trouve dans mon tableau
+        
+        if(currentPlantAdded){
+            const cartFilterredCurrentPlant = cart.filter((plant) => plant.name !==name);  // Creer un nouveau tableau sans ma plante
+
+            updateCart([
+                // ajoute dans mon tableau le tableau des autres cart + mon cart en augementant la quantite
+                ...cartFilterredCurrentPlant, {name, price, amount: currentPlantAdded.amount + 1} 
+            ])
+        }
+        else
+            updateCart([
+                ...cart, {name, price, amount: 1} // ajoute ma nouvelle plante avec la qte de 1
+            ])
+    }
 
 
-function ShoppingList(){
-    
-    return (
-        <div>
-            <ul>
-                {categories.map((cat) =>(
-                    <li key = {cat}>{cat}</li>
-                ))}
-            </ul>
-            
-            <ul className='lmj-plant-list'>
-                {plantList.map(({id, cover, name, water, light}  ) =>(
-                    <PlantItem 
-                        name = {name}
-                        id = {id}
-                        cover = {cover}
-                        water = {water}
-                        light={light}
-                    />
-                    // <li key = {plant.id} className='lmj-plant-item'>
-                    //     {plant.name}
-                    //     {inSolde(plant.isSpecialOffer)}
-                    //     {/* <CareScale scaleValue={plant.light} /> */}
-                    //     <CareScale careType='water' scaleValue={plant.water} />
-                    //     <CareScale careType='light' scaleValue={plant.light} />
-                    // </li>
-                ))}
+	return (
+		<div className='lmj-shopping-list'>
+			
+                <Categories categories = {categories} setActiveCategory = {setActiveCategory} activeCategory = {activeCategory}/>
+                
+			<ul className='lmj-plant-list'>
            
-            </ul>
-        </div>
-
-    );
+                { plantList.map(({ id, cover, name, water, light, price, category }) => 
+                    !activeCategory || activeCategory === category ? (
+                        <div key = {id} >
+                            <PlantItem
+                            key={id}
+                            cover={cover}
+                            name={name}
+                            water={water}
+                            light={light}
+                        />
+                        <button onClick={()=> addToCart(name, price)}>Ajouter </button>
+                 </div> 
+                    ) : null
+         )}
+			</ul>
+		</div>
+	)
 }
 
 export default ShoppingList
